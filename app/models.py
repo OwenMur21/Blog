@@ -19,6 +19,8 @@ class User(UserMixin, db.Model):
     pass_secure = db.Column(db.String(255))
     bio = db.Column(db.String(255))
     profile_pic_path = db.Column(db.String())
+    blogs = db.relationship('Blog', backref='user', lazy='dynamic')
+    comments = db.relationship('Comments', backref = 'user', lazy = 'dynamic')
 
     def __repr__(self):
         return f'User {self.username}'
