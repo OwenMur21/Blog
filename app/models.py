@@ -61,3 +61,30 @@ class Blog(db.Model):
     def get_blogs(cls):
         blogs = Blog.query.all()
         return blogs
+
+
+class Comments(db.Model):
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key = True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    blog_id = db.Column(db.Integer, db.ForeignKey('blogs.id'))
+    description = db.Column(db.String(255))
+
+    def save_comment(self):
+        """
+        Function that saves the jcomments made on a blog
+        """
+        db.session.add(self)
+        db.session.commit()
+
+    def delete_comment(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    @classmethod
+    def get_comments(self, id):
+        comment = Comments.query.filter_by(blogs_id=id).all()
+        return comment
+
+    def __repr__(self):
+        return f'Comment: {self.description}'
