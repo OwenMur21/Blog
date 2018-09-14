@@ -80,3 +80,14 @@ def view_blog(id):
     blogs = Blog.query.get(id)
     comments = Comments.get_comments(id)
     return render_template('view.html', blogs=blogs, comments=comments, id=id)
+
+@main.route('/delete-blog/<int:id>', methods=['GET', 'POST'])
+@login_required
+def del_blog(id):
+    """
+    Function that enables one to delete a blog post
+    """
+    print(id)
+    blogs = Blog.query.get(id)
+    blogs.delete_blog()
+    return redirect(url_for('main.index'))
