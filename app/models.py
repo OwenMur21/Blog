@@ -45,7 +45,7 @@ class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(255))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    comments = db.relationship('Commentjoke', backref='title', lazy='dynamic')
+    comments = db.relationship('Comments', backref='title', lazy='dynamic')
 
     def save_blog(self):
         db.session.add(self)
@@ -74,7 +74,7 @@ class Comments(db.Model):
 
     def save_comment(self):
         """
-        Function that saves the jcomments made on a blog
+        Function that saves the comments made on a blog
         """
         db.session.add(self)
         db.session.commit()
