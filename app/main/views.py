@@ -69,3 +69,14 @@ def new_blog():
         new_blog.save_blog()
         return redirect(url_for('main.index'))
     return render_template('new-blog.html',form=form)
+
+@main.route('/view-blog/<int:id>', methods=['GET', 'POST'])
+@login_required
+def view_blog(id):
+    """
+    Returns the blog to be commented on
+    """
+    print(id)
+    blogs = Blog.query.get(id)
+    comments = Comments.get_comments(id)
+    return render_template('view.html', blogs=blogs, comments=comments, id=id)
