@@ -3,15 +3,17 @@ from . import main
 from flask_login import login_required
 from .forms import UpdateProfile
 from .. import db,photos
-from ..models import User
+from ..models import User, Blog, Comments
 
 
 @main.route('/')
 def index():
-
-    '''
-    View root page function that returns the index page and its data
-    '''
+    """
+    View blogs 
+    """
+    blogs = Blog.query.all()
+    if blogs is None:
+        abort(404)
     return render_template('index.html')
 
 @main.route('/user/<uname>')
