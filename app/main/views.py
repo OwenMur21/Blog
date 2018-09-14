@@ -1,9 +1,9 @@
 from flask import render_template,request,redirect,url_for,abort
 from . import main
-from flask_login import login_required
-from .forms import UpdateProfile
+from flask_login import login_required, current_user
 from .. import db,photos
 from ..models import User, Blog, Comments
+from .forms import PitchForm, CommentForm, UpdateProfile
 
 
 @main.route('/')
@@ -14,7 +14,7 @@ def index():
     blogs = Blog.query.all()
     if blogs is None:
         abort(404)
-    return render_template('index.html')
+    return render_template('index.html', blogs=blogs)
 
 @main.route('/user/<uname>')
 def profile(uname):
@@ -54,3 +54,18 @@ def update_pic(uname):
         user.profile_pic_path = path
         db.session.commit()
     return redirect(url_for('main.profile',uname=uname))
+
+@main.route('/blog/new-blog/', methods=['GET', 'POST'])
+@login_required
+def new_blog():
+    """
+    Function that enables one to start a blog
+    """
+    form = PitchForm()
+ 
+    if form.validate_on_submit():
+        content = form.content.data
+        new_blog = Blog(content = content,user_id = current_user.id)
+        new_blog.save_blog()
+        return redirect(url_for('main.index'))
+    return render_template('new-blog.html',form=form)
