@@ -17,6 +17,9 @@
 <div class="thumbnail" style="padding:5%;">
 {% for comment in comments%}
    <p style="font-size:20px;">-- {{comment.description}}</p>
+    <a class="btn btn-danger" href="/del-comment/{{comment.id}}"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+      <hr>
+
    {% endfor %}
 </div>
 </div>
