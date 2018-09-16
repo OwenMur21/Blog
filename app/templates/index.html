@@ -1,22 +1,16 @@
 {% extends 'base.html' %}
- {% import 'bootstrap/wtf.html' as wtf %}
 {% block styles%}
 {{ super() }}
-<link href="https://fonts.googleapis.com/css?family=Pangolin" rel="stylesheet"> 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="{{url_for('static',filename='css/index.css')}}">
 {% endblock %}
+
 <!-- content block -->
 {% block content %}
-</div>
-  <div class=" col-md-8">
-       <a class="btn btn-primary text-center " href="/blog/new-blog/"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Start a blog</a>
-       <a class="btn btn-info text-center  " href="/subscribe/"></span> Subscribe</a>
-       <hr>
-  </div>
+<body>
    {% if blogs %}
   <div class=" col-md-8">
             {% for blog in blogs%}
-            <div class="thumbnail">
+            <div class="thumbnail" style="border-radius:10px; background-color:#EFE0B9;">
              <article class="media content-section">
                 <div class="media-body">
                     <div class="article-metadata">
@@ -30,7 +24,6 @@
                 </div>
             
             </div>
-            <a class="btn btn-primary text-center text-danger" href="/comment/{{blog.id}}">Comment</a>
                 <a class="btn btn-danger" href="/delete-blog/{{blog.id}}"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
 <hr>
           {% endfor %}
@@ -40,5 +33,5 @@
           <h4 style="padding:10%; text-align:center; font-size:50px">No blogs created yet</h4>
         </div>
 {% endif %}
-       
+ </body>      
 {% endblock %}

@@ -1,5 +1,5 @@
 virtual/
 *.pyc
-*start.sh
+*.sh
 
 migrations/

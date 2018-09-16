@@ -124,7 +124,7 @@ def del_comment(id):
     if comment.user_id != current_user.id:
         abort(403)
     comment.delete_comment()
-    return redirect(url_for('.view_blog'))
+    return redirect(url_for('.index'))
 
 @main.route('/subscribe/', methods=['GET', 'POST'])
 @login_required
