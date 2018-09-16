@@ -17,6 +17,7 @@ def home():
     return render_template('home.html', title=title)
 
 @main.route('/index')
+@login_required
 def index():
     """
     View blogs 
