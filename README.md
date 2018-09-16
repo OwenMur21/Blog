@@ -27,7 +27,7 @@ To access this app on your local machine:
 
 ## Known Bugs
 
-There are currently no known bugs.
+When registering, you may get an error 500. Simply login with the same credentials and you will be able to access the site.
 
 ### Technologies used
 
