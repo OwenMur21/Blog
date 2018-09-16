@@ -2,8 +2,9 @@ from flask import render_template,request,redirect,url_for,abort
 from . import main
 from flask_login import login_required, current_user
 from .. import db,photos
-from ..models import User, Blog, Comments
-from .forms import PitchForm, CommentForm, UpdateProfile
+from ..models import User, Blog, Comments, Subscription
+from .forms import PitchForm, CommentForm, UpdateProfile, SubscribeForm
+from app.email import mail_message
 
 
 @main.route('/')
@@ -65,8 +66,13 @@ def new_blog():
  
     if form.validate_on_submit():
         content = form.content.data
-        new_blog = Blog(content = content,user_id = current_user.id)
+        title = form.title.data
+        author = form.author.data
+        new_blog = Blog(content = content, title=title, author = author,  user_id = current_user.id)
         new_blog.save_blog()
+        subs = Subscription.query.all()
+        for sub in subs:
+            mail_message("New Blog", "email/new_blog", sub.email)
         return redirect(url_for('main.index'))
     return render_template('new-blog.html',form=form)
 
@@ -87,7 +93,51 @@ def del_blog(id):
     """
     Function that enables one to delete a blog post
     """
-    print(id)
-    blogs = Blog.query.get(id)
-    blogs.delete_blog()
+    blog = Blog.query.get_or_404(id)
+    if blog.user_id != current_user.id:
+        abort(403)
+    blog.delete_blog()
     return redirect(url_for('main.index'))
+
+@main.route('/comment/<int:id>', methods=['GET', 'POST'])
+@login_required
+def blog_comment(id):
+    """
+    Function to post joke comments on specific joke
+    """ 
+    form = CommentForm() 
+    blogs = Blog.query.filter_by(id=id).first()
+    if form.validate_on_submit():
+        description = form.description.data
+        new_comment = Comments(description=description, user_id=current_user.id, blog_id=blogs.id)
+        new_comment.save_comment()
+        return redirect(url_for('.index', id=blogs.id))  
+    return render_template('comments.html',form=form,blogs=blogs)
+
+@main.route('/del-comment/<int:id>', methods=['GET', 'POST'])
+@login_required
+def del_comment(id):
+    """
+    Function that enables one to delete a comment made on their blog
+    """
+    comment = Comments.query.get_or_404(id)
+    if comment.user_id != current_user.id:
+        abort(403)
+    comment.delete_comment()
+    return redirect(url_for('.view_blog'))
+
+@main.route('/subscribe/', methods=['GET', 'POST'])
+@login_required
+def sub():
+    """
+    Function that enables one to subscribe to the blog
+    """
+    form = SubscribeForm()
+    if form.validate_on_submit():
+        subscription = Subscription(email = form.email.data)
+        db.session.add(subscription)
+        db.session.commit()
+        return redirect(url_for('main.index'))
+
+    return render_template('sub.html',form = form)
+
