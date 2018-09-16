@@ -1,4 +1,5 @@
 from . import db
+from datetime import datetime
 from werkzeug.security import generate_password_hash ,check_password_hash
 from flask_login import UserMixin
 from . import login_manager
@@ -17,7 +18,6 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(255))
     email = db.Column(db.String(255),unique = True,index = True)
     pass_secure = db.Column(db.String(255))
-    bio = db.Column(db.String(255))
     profile_pic_path = db.Column(db.String())
     blogs = db.relationship('Blog', backref='user', lazy='dynamic')
     comments = db.relationship('Comments', backref = 'user', lazy = 'dynamic')
@@ -43,9 +43,12 @@ class User(UserMixin, db.Model):
 class Blog(db.Model):
     __tablename__ = 'blogs'
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(255))
+    content = db.Column(db.Text, nullable=False)
+    title = db.Column(db.String(255))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    comments = db.relationship('Comments', backref='title', lazy='dynamic')
+    author = db.Column(db.String(255))
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    comments = db.relationship('Comments', backref='blog', lazy='dynamic')
 
     def save_blog(self):
         db.session.add(self)
@@ -68,9 +71,9 @@ class Blog(db.Model):
 class Comments(db.Model):
     __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key = True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    blog_id = db.Column(db.Integer, db.ForeignKey('blogs.id'))
-    description = db.Column(db.String(255))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    blog_id = db.Column(db.Integer, db.ForeignKey("blogs.id"))
+    description = db.Column(db.String(500))
 
     def save_comment(self):
         """
@@ -90,3 +93,12 @@ class Comments(db.Model):
 
     def __repr__(self):
         return f'Comment: {self.description}'
+
+
+class Subscription(UserMixin, db.Model):
+    __tablename__ = 'subs'
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True, index=True, nullable=False)
+
+    def __repr__(self):
+        return f'{self.email}'
