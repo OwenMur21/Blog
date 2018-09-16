@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+ {% import 'bootstrap/wtf.html' as wtf %}
 {% block styles%}
 {{ super() }}
 <link href="https://fonts.googleapis.com/css?family=Pangolin" rel="stylesheet"> 
@@ -6,21 +7,32 @@
 {% endblock %}
 <!-- content block -->
 {% block content %}
-
-  <div class=" col-md-10 col-md-offset-1 col-sm-12">
-      <h3>Blogs</h3>
-  
-       <a class="btn btn-primary text-center text-danger " href="/blog/new-blog/"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Start a blog</a>
+</div>
+  <div class=" col-md-8">
+       <a class="btn btn-primary text-center " href="/blog/new-blog/"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Start a blog</a>
+       <a class="btn btn-info text-center  " href="/subscribe/"></span> Subscribe</a>
        <hr>
   </div>
    {% if blogs %}
-  <div class=" col-md-10 col-md-offset-1 col-sm-12">
+  <div class=" col-md-8">
             {% for blog in blogs%}
-            <p>{{blog.content}} </p>
-            <a class="btn btn-primary text-center text-danger" href="/view-blog/{{blog.id}}">View Comments</a>
-              <a class="btn btn-primary text-center text-danger" href="/comment/{{blog.id}}">Comment</a>
-                 <a class="btn btn-danger" href="/delete-blog/{{blog.id}}"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
-             <hr>
+            <div class="thumbnail">
+             <article class="media content-section">
+                <div class="media-body">
+                    <div class="article-metadata">
+                        <p>{{ blog.author }}</p>
+                        <small class="text-muted">{{ blog.date_posted.strftime('%Y-%m-%d')}}</small>
+                        <hr>
+                    </div>
+                    
+            <a href="/view-blog/{{blog.id}}">{{blog.title | upper}}</a>
+                    <p >{{ blog.content }}</p>
+                </div>
+            
+            </div>
+            <a class="btn btn-primary text-center text-danger" href="/comment/{{blog.id}}">Comment</a>
+                <a class="btn btn-danger" href="/delete-blog/{{blog.id}}"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+<hr>
           {% endfor %}
             </div>
              {%else%}
