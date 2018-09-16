@@ -8,6 +8,15 @@ from app.email import mail_message
 
 
 @main.route('/')
+def home():
+    """
+    Renders the home page
+    """
+    title = "Welcome | Ozzy Blog"
+    
+    return render_template('home.html', title=title)
+
+@main.route('/index')
 def index():
     """
     View blogs 
