@@ -1,6 +1,7 @@
 # Personal-blog
 
-A web application where one can start blogs and users can comment on the topic or start a blog of their own
+A web application where one can start blogs and users can comment on the topic or start a blog of their own.
+Live link: https://ozzy-blog.herokuapp.com/
 
 ### Prerequisites
 
