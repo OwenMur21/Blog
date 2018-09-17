@@ -28,7 +28,7 @@ To access this app on your local machine:
 
 ## Known Bugs
 
-When registering, you may get an error 500. Simply login with the same credentials and you will be able to access the site.
+There are no bugs. Incase of any, contact me at owenmuriithi@gmail.com
 
 ### Technologies used
 
